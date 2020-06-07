@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AssignTicketRequest;
 use App\Ticket;
 use Illuminate\Support\Facades\Auth;
+use Response;
 
 class AssignTicketController extends Controller
 {
@@ -19,6 +20,6 @@ class AssignTicketController extends Controller
         $ticket = Ticket::find($request->id);
         $ticket->agent_id = Auth::user()->id;
         $ticket->save();
-        return redirect()->route('tickets.index')->with('status', "Ticket #$ticket->id assigned to you!");
+        return response()->json(['status' => 'Başarıyla ticket üzerine atandı!']);
     }
 }

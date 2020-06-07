@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompleteTicketRequest;
 use App\Ticket;
 use Illuminate\Http\Request;
+use Response;
 
 class CompleteTicketController extends Controller
 {
@@ -19,6 +20,6 @@ class CompleteTicketController extends Controller
         $ticket = Ticket::find($request->id);
         $ticket->ticket_status_id = Ticket::STATUS_COMPLETED;
         $ticket->save();
-        return redirect()->route('tickets.index')->with('status', "Ticket #$ticket->id completed!");
+        return response()->json('Ticket başarıyla tamamlandı!');
     }
 }

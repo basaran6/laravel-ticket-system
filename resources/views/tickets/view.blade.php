@@ -4,8 +4,13 @@
 
 @section('content_header')
 <h1>{{$ticket->title}}</h1>
-<h2>{{$ticket->ticketPriority->title}} - Agent: {{$ticket->agent->name ?? 'Unassigned!'}}</h2>
-<button type="button" class="btn btn-link btn-submit" id="{{$ticket->id}}">Ticketi Üzerine Al!</button>
+<h2>Öncelik: <i>{{$ticket->ticketPriority->title}}</i> - Durum: <i class="ticket-status">{{$ticket->ticketStatus->title}}</i> - Agent: <i class="agent">{{$ticket->agent->name ?? 'Unassigned!'}}</i></h2>
+<button type="button" class="btn btn-link btn-assign-submit" id="{{$ticket->id}}">Ticketi Üzerine
+    Al!</button>
+@if($ticket->ticket_status_id != Ticket::STATUS_COMPLETED)
+<button type="button" class="btn btn-link btn-complete-submit" id="status-{{$ticket->id}}">Tamamlandı
+    olarak işaretle</button>
+@endif
 @stop
 
 @section('content')
@@ -84,7 +89,23 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    $(".btn-submit").click(function(e){
+
+    $(".btn-complete-submit").click(function(e){
+        e.preventDefault();
+        var ticketID = $(this).attr('id').match(/\d+/)[0];
+        $.ajax({
+            type:'POST',
+            url:'/complete-ticket',
+            data:{id:ticketID},
+            success:function(data){
+                $('.ticket-status').html('Kapalı');
+                $('#status-' + ticketID).remove();
+                alert('Ticket başarıyla kapatıldı!');
+            }
+            });
+    });
+    
+    $(".btn-assign-submit").click(function(e){
         e.preventDefault();
         var ticketID = $(this).attr('id');
         $.ajax({
@@ -92,6 +113,8 @@
             url:'/assign-ticket',
             data:{id:ticketID},
             success:function(data){
+                var user = {!! json_encode(Auth::user()) !!};
+                $('.agent').html(user.name);
                 alert('Ticket başarıyla atandı!');
             }
             });
