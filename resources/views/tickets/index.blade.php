@@ -42,13 +42,13 @@
                     @foreach($tickets as $ticket)
                     <tr>
                         <td>{{$ticket->id}}</td>
-                        <td>{{$ticket->title}}</td>
+                        <td><a href="{{route('tickets.show', $ticket->id)}}">{{$ticket->title}}</a></td>
                         <td>{{$ticket->customer->name}}</td>
                         <td>{{$ticket->ticketType->title}}</td>
                         <td>{{$ticket->ticketPriority->title}}</td>
                         <td>{{$ticket->ticketStatus->title}}</td>
                         <td>{{$ticket->agent->name ?? 'Unassigned!'}}</td>
-                        <td></td>
+                        <td><a href="{{route('tickets.show', $ticket->id)}}">Görüntüle</a></td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -40,6 +40,37 @@
         <div class="card-body">
             {{$ticket->body}}
         </div>
+        <h3>Yorumlar</h3>
+        @forelse($ticket->comments as $comment)
+        <!-- /.card-body -->
+        <div class="card-footer card-comments">
+            <div class="card-comment">
+                <div class="comment-text">
+                    <span class="username">
+                        {{$comment->author->name}}
+                        <span class="text-muted float-right">{{$comment->created_at}}</span>
+                    </span><!-- /.username -->
+                    {{$comment->body}}
+                </div>
+                <!-- /.comment-text -->
+            </div>
+        </div>
+        @empty
+        <p>Herhangi bir yorum bulunmamaktadır.</p>
+        @endforelse
+        <!-- /.card-footer -->
+        <div class="card-footer">
+            <form action="{{route('comments.store')}}" method="post">
+                @csrf
+                <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
+                <div class="img-push">
+                    <input type="text" name="body" class="form-control form-control-sm"
+                        placeholder="Press enter to ticket comment">
+                </div>
+                <button type="submit">Gönder</button>
+            </form>
+        </div>
+        <!-- /.card-footer -->
     </div>
 </div>
 @stop

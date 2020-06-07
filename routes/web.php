@@ -21,3 +21,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/tickets', 'TicketController')->middleware('auth');
+Route::post('/comments/store', 'CommentController@store')->name('comments.store');
