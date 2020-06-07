@@ -48,9 +48,12 @@
                         <td>{{$ticket->ticketPriority->title}}</td>
                         <td id="ticket-status-{{$ticket->id}}">{{$ticket->ticketStatus->title}}</td>
                         <td>{{$ticket->agent->name ?? 'Unassigned!'}}</td>
-                        <td><a href="{{route('tickets.show', $ticket->id)}}">Görüntüle</a> /
+                        <td><a href="{{route('tickets.show', $ticket->id)}}">Görüntüle</a>
+                            @if($ticket->ticket_status_id != Ticket::STATUS_COMPLETED)
                             <button type="button" class="btn btn-link btn-submit" id="{{$ticket->id}}">Tamamlandı
-                                olarak işaretle</button> </td>
+                                olarak işaretle</button>
+                            @endif
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -79,6 +82,7 @@
             data:{id:ticketID},
             success:function(data){
                 $('#ticket-status-' + ticketID).html('Kapalı');
+                $('#' + ticketID).remove();
                 alert('Ticket başarıyla kapatıldı!');
             }
             });
