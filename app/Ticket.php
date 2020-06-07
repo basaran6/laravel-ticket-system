@@ -47,7 +47,9 @@ class Ticket extends Model
         parent::boot();
 
         static::creating(function ($query) {
-            $query->customer_id = Auth::user()->id;
+            if (!$query->customer_id) {
+                $query->customer_id = Auth::user()->id;
+            }
         });
     }
 
