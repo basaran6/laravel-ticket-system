@@ -241,6 +241,11 @@ return [
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
+        [
+            'text'        => 'Tickets',
+            'url'         => 'tickets',
+            'icon'        => 'far fa-fw fa-file'
+        ],
     ],
 
     /*
