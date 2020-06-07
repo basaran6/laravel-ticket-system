@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+<a href="{{route('tickets.create')}}">Create new ticket</a>
 <div class="col-12">
     <div class="card">
         <div class="card-header">
@@ -27,6 +28,7 @@
             <table class="table table-hover text-nowrap">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Title</th>
                         <th>Customer</th>
                         <th>Ticket Type</th>
@@ -39,12 +41,13 @@
                 <tbody>
                     @foreach($tickets as $ticket)
                     <tr>
+                        <td>{{$ticket->id}}</td>
                         <td>{{$ticket->title}}</td>
                         <td>{{$ticket->customer->name}}</td>
                         <td>{{$ticket->ticketType->title}}</td>
                         <td>{{$ticket->ticketPriority->title}}</td>
                         <td>{{$ticket->ticketStatus->title}}</td>
-                        <td>{{$ticket->agent->name}}</td>
+                        <td>{{$ticket->agent->name ?? 'Unassigned!'}}</td>
                         <td></td>
                     </tr>
                     @endforeach
