@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,6 +48,22 @@ class Ticket extends Model
         });
     }
 
+    // Mutators
+    /**
+     * Get the ticket's days active.
+     *
+     * @return string
+     */
+    public function getDaysActiveAttribute()
+    {
+        $now = Carbon::now();
+        if($this->completed_at){
+            return $this->created_at->diff($this->completed_at)->days . ' gün aktifti! (Ticket Kapalı)';
+        }
+        return $this->created_at->diff($now)->days . ' gündür aktif!';
+    }
+
+    // Relations
     /**
      * Get the agent for the ticket.
      */

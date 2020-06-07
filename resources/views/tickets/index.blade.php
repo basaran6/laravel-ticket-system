@@ -35,6 +35,9 @@
                         <th>Ticket Priority</th>
                         <th>Ticket Status</th>
                         <th>Agent</th>
+                        <th>Oluşturulma Tarihi</th>
+                        <th>Tamamlanma Tarihi</th>
+                        <th>Geçen Gün</th>
                         <th>Details</th>
                     </tr>
                 </thead>
@@ -48,6 +51,9 @@
                         <td>{{$ticket->ticketPriority->title}}</td>
                         <td id="ticket-status-{{$ticket->id}}">{{$ticket->ticketStatus->title}}</td>
                         <td>{{$ticket->agent->name ?? 'Unassigned!'}}</td>
+                        <td>{{$ticket->created_at}}</td>
+                        <td>{{$ticket->completed_at ?? '-'}}</td>
+                        <td>{{$ticket->days_active}}</td>
                         <td><a href="{{route('tickets.show', $ticket->id)}}">Görüntüle</a>
                             @if($ticket->ticket_status_id != Ticket::STATUS_COMPLETED)
                             <button type="button" class="btn btn-link btn-submit" id="{{$ticket->id}}">Tamamlandı
