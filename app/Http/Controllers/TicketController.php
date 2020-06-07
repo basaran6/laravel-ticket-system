@@ -64,7 +64,10 @@ class TicketController extends Controller
      */
     public function show($id)
     {
-        //
+        return Cache::remember('show-ticket' . $id, Ticket::CACHE_TTL, function () use ($id) {
+            $ticket = Ticket::findOrFail($id);
+            return view('tickets.view', compact('ticket'))->render();
+        });
     }
 
     /**
