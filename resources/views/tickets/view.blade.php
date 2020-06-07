@@ -4,7 +4,8 @@
 
 @section('content_header')
 <h1>{{$ticket->title}}</h1>
-<h2>{{$ticket->ticketPriority->name}}</h2>
+<h2>{{$ticket->ticketPriority->title}} - Agent: {{$ticket->agent->name ?? 'Unassigned!'}}</h2>
+<button type="button" class="btn btn-link btn-submit" id="{{$ticket->id}}">Ticketi Üzerine Al!</button>
 @stop
 
 @section('content')
@@ -77,4 +78,27 @@
 
 @section('css')
 <link rel="stylesheet" href="/css/admin_custom.css">
+@stop
+
+@section('js')
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $(".btn-submit").click(function(e){
+        e.preventDefault();
+        var ticketID = $(this).attr('id');
+        $.ajax({
+            type:'POST',
+            url:'/assign-ticket',
+            data:{id:ticketID},
+            success:function(data){
+                alert('Ticket başarıyla atandı!');
+            }
+            });
+	});
+
+</script>
 @stop

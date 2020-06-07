@@ -22,5 +22,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 // Ticket Controller -- namespace eklenebilir.
 Route::resource('/tickets', 'TicketController')->middleware('auth');
-Route::post('/complete-ticket', 'CompleteTicketController');
+Route::post('/complete-ticket', 'CompleteTicketController')->middleware('auth');
+Route::post('/assign-ticket', 'AssignTicketController')->middleware('auth');
 Route::post('/comments/store', 'CommentController@store')->name('comments.store');

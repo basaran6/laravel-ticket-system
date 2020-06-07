@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Ticket;
+use Illuminate\Support\Facades\Cache;
 
 class TicketObserver
 {
@@ -29,6 +30,7 @@ class TicketObserver
             $ticket->completed_at = now();
         }
     }
+    
     /**
      * Handle the ticket "updated" event.
      *
@@ -37,7 +39,20 @@ class TicketObserver
      */
     public function updated(Ticket $ticket)
     {
-        //
+        Cache::forget('show-ticket' . $ticket->id);
+        Cache::tags(['list-tickets'])->flush();
+    }
+
+    /**
+     * Handle the ticket "saved" event.
+     *
+     * @param  \App\Ticket  $ticket
+     * @return void
+     */
+    public function saved(Ticket $ticket)
+    {
+        Cache::forget('show-ticket' . $ticket->id);
+        Cache::tags(['list-tickets'])->flush();
     }
 
     /**

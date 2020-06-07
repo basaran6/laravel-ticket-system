@@ -17,7 +17,6 @@ class CommentController extends Controller
     public function store(StoreCommentRequest $request)
     {
         $comment = Comment::create($request->validated());
-        Cache::forget('show-ticket' . $request->ticket_id);
         return redirect()->route('tickets.show', ['ticket' => $comment->ticket_id])->with('status', 'Yorum Yapıldı!');
     }
 }

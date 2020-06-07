@@ -20,7 +20,7 @@ class TicketController extends Controller
         $currentPage = request()->get('page', 1);
         $type = request()->get('type', null);
         $perPage = 10; // User özelinde yapılabilir.
-        return Cache::remember('tickets-' . $type . '-pp-' . $perPage . '-p-' . $currentPage, Ticket::CACHE_TTL, function () use ($type, $perPage, $currentPage) {
+        return Cache::tags(['list-tickets', 'all-tickets'])->remember('tickets-' . $type . '-pp-' . $perPage . '-p-' . $currentPage, Ticket::CACHE_TTL, function () use ($type, $perPage, $currentPage) {
             if ($type == 'active') {
                 $tickets = Ticket::active()->orderBy('id', 'desc')->paginate($perPage,  ['*'], 'page', $currentPage);
             } else if ($type == 'completed') {
