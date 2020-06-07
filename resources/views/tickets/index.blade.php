@@ -4,11 +4,25 @@
 
 @section('content_header')
 <h1>Tickets</h1>
+<a href="{{route('tickets.create')}}">Create new ticket</a>
 @stop
 
 @section('content')
-<a href="{{route('tickets.create')}}">Create new ticket</a>
 <div class="col-12">
+    <ul class="nav nav-tabs" id="custom-content-above-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" id="custom-content-above-profile-tab" href="{{route('tickets.index')}}"
+                role="tab">All</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="custom-content-above-messages-tab"
+                href="{{route('tickets.index', ['type'=>'active'])}}" role="tab">Active</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="custom-content-above-settings-tab"
+                href="{{route('tickets.index', ['type'=>'completed'])}}" role="tab">Completed</a>
+        </li>
+    </ul>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Latest Tickets</h3>
@@ -64,6 +78,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $tickets->appends(request()->query())->links() }}
         </div>
         <!-- /.card-body -->
     </div>

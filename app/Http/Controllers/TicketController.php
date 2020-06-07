@@ -15,12 +15,22 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = Ticket::all();
-        return view('tickets.index')->with([
-            'tickets'   =>  $tickets
-        ]);
+        $currentPage = request()->get('page', 1);
+        $type = request()->get('type', null);
+        $perPage = 10; // User özelinde yapılabilir.
+        return Cache::remember('tickets-' . $type . '-pp-' . $perPage . '-p-' . $currentPage, 1, function () use ($type, $perPage, $currentPage) {
+            if ($type == 'active') {
+                $tickets = Ticket::active()->paginate($perPage,  ['*'], 'page', $currentPage);
+            } else if ($type == 'completed') {
+                $tickets = Ticket::completed()->paginate($perPage,  ['*'], 'page', $currentPage);
+            } else {
+                $tickets = Ticket::paginate($perPage,  ['*'], 'page', $currentPage);
+            }
+            $tickets->appends(request()->query());
+            return view('tickets.index', compact('tickets'))->render();
+        });
     }
 
     /**
@@ -30,18 +40,20 @@ class TicketController extends Controller
      */
     public function create()
     {
-        $ticketTypes = Cache::remember('ticket_types', Ticket::CACHE_TTL, function () {
-            return DB::table('ticket_types')->select('id', 'title')->get();
-        });
+        return Cache::remember('create-ticket', Ticket::CACHE_TTL, function () {
+            $ticketTypes = Cache::remember('ticket_types', Ticket::CACHE_TTL, function () {
+                return DB::table('ticket_types')->select('id', 'title')->get();
+            });
 
-        $ticketPriorities = Cache::remember('ticket_priorities', Ticket::CACHE_TTL, function () {
-            return DB::table('ticket_priorities')->select('id', 'title')->get();
-        });
+            $ticketPriorities = Cache::remember('ticket_priorities', Ticket::CACHE_TTL, function () {
+                return DB::table('ticket_priorities')->select('id', 'title')->get();
+            });
 
-        return view('tickets.form')->with([
-            'ticketTypes'  =>  $ticketTypes,
-            'ticketPriorities'  =>  $ticketPriorities
-        ]);
+            return view('tickets.form', compact([
+                'ticketTypes',
+                'ticketPriorities'
+            ]))->render();
+        });
     }
 
     /**

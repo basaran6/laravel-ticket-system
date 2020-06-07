@@ -57,7 +57,7 @@ class Ticket extends Model
     public function getDaysActiveAttribute()
     {
         $now = Carbon::now();
-        if($this->completed_at){
+        if ($this->completed_at) {
             return $this->created_at->diff($this->completed_at)->days . ' gün aktifti! (Ticket Kapalı)';
         }
         return $this->created_at->diff($now)->days . ' gündür aktif!';
@@ -110,5 +110,27 @@ class Ticket extends Model
     public function customer()
     {
         return $this->belongsTo('App\User', 'customer_id', 'id');
+    }
+
+    // Scopes
+    /**
+     * Scope a query to only include active tickets.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('ticket_status_id', '=', self::STATUS_OPENED);
+    }
+    /**
+     * Scope a query to only include completed tickets.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('ticket_status_id', '=', self::STATUS_COMPLETED);
     }
 }
