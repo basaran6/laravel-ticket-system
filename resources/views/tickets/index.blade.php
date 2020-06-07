@@ -46,9 +46,11 @@
                         <td>{{$ticket->customer->name}}</td>
                         <td>{{$ticket->ticketType->title}}</td>
                         <td>{{$ticket->ticketPriority->title}}</td>
-                        <td>{{$ticket->ticketStatus->title}}</td>
+                        <td id="ticket-status-{{$ticket->id}}">{{$ticket->ticketStatus->title}}</td>
                         <td>{{$ticket->agent->name ?? 'Unassigned!'}}</td>
-                        <td><a href="{{route('tickets.show', $ticket->id)}}">Görüntüle</a></td>
+                        <td><a href="{{route('tickets.show', $ticket->id)}}">Görüntüle</a> /
+                            <button type="button" class="btn btn-link btn-submit" id="{{$ticket->id}}">Tamamlandı
+                                olarak işaretle</button> </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -58,4 +60,29 @@
     </div>
     <!-- /.card -->
 </div>
+@stop
+
+
+@section('js')
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $(".btn-submit").click(function(e){
+        e.preventDefault();
+        var ticketID = $(this).attr('id');
+        $.ajax({
+            type:'POST',
+            url:'/complete-ticket',
+            data:{id:ticketID},
+            success:function(data){
+                $('#ticket-status-' + ticketID).html('Kapalı');
+                alert('Ticket başarıyla kapatıldı!');
+            }
+            });
+	});
+
+</script>
 @stop

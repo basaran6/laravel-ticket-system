@@ -53,7 +53,7 @@ class TicketController extends Controller
     public function store(StoreTicketRequest $request)
     {
         $ticket = Ticket::create($request->validated());
-        return redirect()->route('tickets.show', ['ticket' => $ticket])->with('status', 'Profile updated!');
+        return redirect()->route('tickets.show', ['ticket' => $ticket])->with('status', 'Ticket created!');
     }
 
     /**
