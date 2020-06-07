@@ -11,6 +11,9 @@ class Ticket extends Model
     const CACHE_TTL = 100;
     const STATUS_OPENED = 1;
     const STATUS_COMPLETED = 2;
+    const PRIORITY_LOW = 1;
+    const PRIORITY_NORMAL = 2;
+    const PRIORITY_HIGH = 3;
 
     /**
      * Default values for attributes
@@ -123,6 +126,7 @@ class Ticket extends Model
     {
         return $query->where('ticket_status_id', '=', self::STATUS_OPENED);
     }
+
     /**
      * Scope a query to only include completed tickets.
      *
@@ -132,5 +136,26 @@ class Ticket extends Model
     public function scopeCompleted($query)
     {
         return $query->where('ticket_status_id', '=', self::STATUS_COMPLETED);
+    }
+
+    /**
+     * Scope a query to only include high priority tickets.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeHighPriority($query)
+    {
+        return $query->where('ticket_priority_id', '=', self::PRIORITY_HIGH);
+    }
+    /**
+     * Scope a query to only include tickets older than x days.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOlderThanDays($query, $days)
+    {
+        return $query->where('created_at', '<=', Carbon::now()->subDays($days));
     }
 }
